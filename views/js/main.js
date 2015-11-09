@@ -18,6 +18,26 @@ cameron *at* udacity *dot* com
 
 // As you may have realized, this website randomly generates pizzas.
 // Here are arrays of all possible pizza ingredients.
+   /*
+Welcome to the 60fps project! Your goal is to make Cam's Pizzeria website run
+jank-free at 60 frames per second.
+
+There are two major issues in this code that lead to sub-60fps performance. Can
+you spot and fix both?
+
+
+Built into the code, you'll find a few instances of the User Timing API
+(window.performance), which will be console.log()ing frame rate data into the
+browser console. To learn more about User Timing API, check out:
+http://www.html5rocks.com/en/tutorials/webperformance/usertiming/
+
+Creator:
+Cameron Pittman, Udacity Course Developer
+cameron *at* udacity *dot* com
+*/
+
+// As you may have realized, this website randomly generates pizzas.
+// Here are arrays of all possible pizza ingredients.
     var pizzaIngredients = {};
 pizzaIngredients.meats = [
   "Pepperoni",
@@ -448,12 +468,14 @@ var resizePizzas = function(size) {
   }
 
   // Iterates through pizza elements on the page and changes their widths
+ //Moved the getElementByClassName outside the loop 
   function changePizzaSizes(size) {
 	var i=0;
+	var elemen = document.getElementsByClassName("randomPizzaContainer");
 	var dx = determineDx(document.getElementsByClassName("randomPizzaContainer")[i], size);
 	var newwidth = (document.getElementsByClassName("randomPizzaContainer")[i].offsetWidth + dx) + 'px';	  
-    for (var i = 0; i < document.getElementsByClassName("randomPizzaContainer").length; i++) {
-      document.getElementsByClassName("randomPizzaContainer")[i].style.width = newwidth;
+    for (var i = 0; i < elemen.length; i++) {
+      elemen[i].style.width = newwidth;
     }
   }
 
@@ -528,30 +550,24 @@ function updatePositions() {
 window.addEventListener('scroll', updatePositions);
 
 // Generates the sliding pizzas when the page loads.
+//Moved elem outside the loop
+//used row and column value to calculate the total number for the loop
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
   var pizza = document.getElementById("movingPizzas1");
-  var top = document.body.scrollTop;
-  
-  for (var i = 0; i < 200; i++) {
+  var elem = document.createElement('img'); 
+  var row = (Math.floor(window.innerHeight/100))	;
+  for (var i = 0; i < (cols*row); i++) {
     var basicLeft = (i % cols) * s;
-    var phase = Math.sin((top / 1250) + (i % 5));
-    itemleft = basicLeft + 100 * phase;
-	if (itemleft > window.innerWidth){
-		continue;
-	}	
-	if ((Math.floor(i / cols) * s) > window.innerHeight){
-		break;
-	}
-    var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
-    elem.style.height = 'auto'; //"100px";
+    elem.style.height = "100px";
     elem.style.width = "73.333px";
     elem.basicLeft = basicLeft;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     pizza.appendChild(elem);
   }
+  
   updatePositions();
 });
